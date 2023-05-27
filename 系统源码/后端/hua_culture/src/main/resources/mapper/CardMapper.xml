@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.good_ghost.hua_culture.mapper.CardMapper">
+
+    <insert id="saveCard" parameterType="com.good_ghost.hua_culture.entity.Card">
+        INSERT INTO card (card_id,user_id,intro,types,classes,video_id,audio_id,photo_id,article_id,source,is_checked,checker,hot,like_num,comment_num,time)
+        values (#{card_id},#{user_id},#{intro},#{types},#{classes},#{video_id},#{audio_id},#{photo_id},#{article_id},#{source},#{is_checked},#{checker},#{hot},#{like_num},#{comment_num},#{time})
+    </insert>
+
+    <insert id="saveVideo" parameterType="com.good_ghost.hua_culture.entity.Video">
+        INSERT INTO video (video_id,group_id,username,url,cover_url,ratio)
+        values (#{video_id},#{group_id},#{username},#{url},#{cover_url},#{ratio})
+    </insert>
+
+    <insert id="saveAudio" parameterType="com.good_ghost.hua_culture.entity.Audio">
+        INSERT INTO audio (audio_id,group_id,username,url)
+        values (#{audio_id},#{group_id},#{username},#{url})
+    </insert>
+
+    <insert id="savePhoto" parameterType="com.good_ghost.hua_culture.entity.Photo">
+        INSERT INTO photo (photo_id,group_id,username,url)
+        values (#{photo_id},#{group_id},#{username},#{url})
+    </insert>
+
+    <insert id="saveArticle" parameterType="com.good_ghost.hua_culture.entity.Article">
+        INSERT INTO article (article_id,group_id,username,content)
+        values (#{article_id},#{group_id},#{username},#{content})
+    </insert>
+
+    <select id="getUserCards" resultType="com.good_ghost.hua_culture.entity.Card">
+        SELECT * FROM card WHERE user_id = #{id}
+    </select>
+
+    <select id="getUserLikedCards" resultType="com.good_ghost.hua_culture.entity.Card">
+        SELECT * FROM card WHERE card_id IN
+        (SELECT liked_id FROM favor WHERE user_id = #{id})
+    </select>
+
+    <select id="getUserCommentedCards" resultType="com.good_ghost.hua_culture.entity.Card">
+        SELECT * FROM card WHERE card_id IN
+        (SELECT card_id FROM comment WHERE user_id = #{id})
+    </select>
+
+    <select id="getCards" resultType="com.good_ghost.hua_culture.entity.Card">
+        SELECT * FROM card
+    </select>
+
+    <select id="getVideo" resultType="com.good_ghost.hua_culture.entity.Video">
+        SELECT * FROM video where video_id = #{id}
+    </select>
+
+    <select id="getAudio" resultType="com.good_ghost.hua_culture.entity.Audio">
+        SELECT * FROM audio where audio_id = #{id}
+    </select>
+
+    <select id="getPhotos" resultType="com.good_ghost.hua_culture.entity.Photo">
+        SELECT * FROM photo where photo_id = #{id}
+    </select>
+
+    <select id="getArticle" resultType="com.good_ghost.hua_culture.entity.Article">
+        SELECT * FROM article where article_id = #{id}
+    </select>
+
+    <insert id="likeCard" parameterType="com.good_ghost.hua_culture.entity.Like">
+        INSERT INTO favor (like_id,user_id,liked_id)
+        values (#{like_id},#{user_id},#{liked_id})
+    </insert>
+
+    <insert id="commentCard" parameterType="com.good_ghost.hua_culture.entity.Comment">
+        INSERT INTO comment (comment_id,card_id,user_id,content)
+        values (#{comment_id},#{card_id},#{user_id},#{content})
+    </insert>
+
+    <update id="updateUserLike">
+        UPDATE user SET like_num = like_num+1 WHERE username = #{id}
+    </update>
+
+    <update id="updateUserComment">
+        UPDATE user SET comment_num = comment_num+1 WHERE username = #{id}
+    </update>
+
+    <select id="getLikedCard" resultType="com.good_ghost.hua_culture.entity.Like">
+        select * from favor where user_id = #{id}
+    </select>
+
+    <update id="updateCardVerify">
+        UPDATE card SET is_checked = true where card_id = #{id}
+    </update>
+
+    <delete id="deleteCardById">
+        DELETE FROM card WHERE card_id = #{id}
+    </delete>
+
+    <select id="getCommentsById" resultType="com.good_ghost.hua_culture.entity.Comment">
+        select * from comment where card_id = #{id}
+    </select>
+
+
+</mapper>
